@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ammar"
+version = "0.1.0"
+description = "Tower maintenance dispatch for UAE facilities operations: urgency scoring and completion-integrity checks computed in Python, with a citation gate that reopens any closure claim it can't verify against the technician's own record."
+requires-python = ">=3.10"
+dependencies = []
+
+[project.optional-dependencies]
+agents = ["anthropic>=0.60"]
+
+[project.scripts]
+ammar = "ammar.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

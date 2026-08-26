@@ -1,0 +1,161 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 930" role="img" aria-label="Architecture diagram of Ammar: a tenant portal and technician roster feed a deterministic Triage Engine that scores urgency and matches a certified technician, producing a computed Work Order. That work order renders straight to a portfolio dashboard and separately becomes the completion record for a three-agent pipeline (Closure Drafter, Cost Reconciler, Dispute-Risk Reviewer). A Verification Gate compares the drafted closure summary directly against the technician's completion record -- not against the agents' own account of the job -- and routes the ticket to Verified or Reopened before a facilities manager signs off and the service-charge ledger is updated.">
+      <style>
+  text { font-family: ui-monospace, "SF Mono", "Roboto Mono", Consolas, monospace; }
+  .node-title { font-size: 13px; font-weight: 600; fill: #1C1815; }
+  .node-sub { font-size: 10.5px; fill: #6B6259; }
+  .edge-label { font-size: 10px; fill: #6B6259; }
+  .edge-label-em { font-size: 10px; fill: #B24C0D; font-weight: 600; }
+  .band-label { font-size: 10.5px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
+  .gate-title { font-size: 13.5px; font-weight: 700; fill: #1C1815; }
+  .gate-sub { font-size: 10px; fill: #6B6259; }
+  .node { fill: #FFFFFF; stroke: #DDD6CB; stroke-width: 1.4; }
+</style>
+<defs>
+        <marker id="arrow-ink" viewBox="0 0 8 8" markerWidth="7" markerHeight="7" refX="7" refY="4" orient="auto-start-reverse">
+          <polygon points="0,0 8,4 0,8" fill="#6B6259" />
+        </marker>
+        <marker id="arrow-slate" viewBox="0 0 8 8" markerWidth="7" markerHeight="7" refX="7" refY="4" orient="auto-start-reverse">
+          <polygon points="0,0 8,4 0,8" fill="#3E5266" />
+        </marker>
+        <marker id="arrow-orange" viewBox="0 0 8 8" markerWidth="7" markerHeight="7" refX="7" refY="4" orient="auto-start-reverse">
+          <polygon points="0,0 8,4 0,8" fill="#B24C0D" />
+        </marker>
+        <marker id="arrow-teal" viewBox="0 0 8 8" markerWidth="7" markerHeight="7" refX="7" refY="4" orient="auto-start-reverse">
+          <polygon points="0,0 8,4 0,8" fill="#1F6E7A" />
+        </marker>
+        <marker id="arrow-brick" viewBox="0 0 8 8" markerWidth="7" markerHeight="7" refX="7" refY="4" orient="auto-start-reverse">
+          <polygon points="0,0 8,4 0,8" fill="#9C3D26" />
+        </marker>
+      </defs>
+
+      <!-- band: deterministic core -->
+      <rect x="20" y="132" width="1140" height="118" rx="2" fill="#E4E9EE" stroke="#3E5266" stroke-width="1" stroke-dasharray="3 3" opacity="0.85" />
+      <text x="40" y="148" class="band-label" fill="#3E5266">Deterministic core — no model calls</text>
+
+      <!-- band: agentic layer -->
+      <rect x="440" y="430" width="700" height="140" rx="2" fill="#F5E2D3" stroke="#B24C0D" stroke-width="1" stroke-dasharray="3 3" opacity="0.85" />
+      <text x="460" y="446" class="band-label" fill="#B24C0D">Agentic layer — sees the completion record only</text>
+
+      <!-- Row A: inputs -->
+      <rect class="node" x="40" y="20" width="300" height="60" rx="2" />
+      <text x="190" y="46" class="node-title" text-anchor="middle">Tenant / Owner Portal</text>
+      <text x="190" y="64" class="node-sub" text-anchor="middle">tickets, app + call centre</text>
+
+      <rect class="node" x="440" y="20" width="300" height="60" rx="2" />
+      <text x="590" y="46" class="node-title" text-anchor="middle">Continuous Dispatch Run</text>
+      <text x="590" y="64" class="node-sub" text-anchor="middle">tickets queue all day, every day</text>
+
+      <rect class="node" x="840" y="20" width="300" height="60" rx="2" />
+      <text x="990" y="46" class="node-title" text-anchor="middle">Technician Roster</text>
+      <text x="990" y="64" class="node-sub" text-anchor="middle">trade certification · current load</text>
+
+      <!-- Row B: deterministic core -->
+      <rect class="node" x="40" y="160" width="300" height="80" rx="2" />
+      <text x="190" y="196" class="node-title" text-anchor="middle">Triage Engine</text>
+      <text x="190" y="216" class="node-sub" text-anchor="middle">trade + urgency classification</text>
+
+      <rect class="node" x="440" y="160" width="300" height="80" rx="2" />
+      <text x="590" y="196" class="node-title" text-anchor="middle">Dispatch Matching</text>
+      <text x="590" y="216" class="node-sub" text-anchor="middle">technician by trade + load</text>
+
+      <rect class="node" x="840" y="160" width="300" height="80" rx="2" />
+      <text x="990" y="196" class="node-title" text-anchor="middle">Work Order</text>
+      <text x="990" y="216" class="node-sub" text-anchor="middle">computed record, per ticket</text>
+
+      <!-- Row C: split -->
+      <rect class="node" x="40" y="300" width="300" height="80" rx="2" />
+      <text x="190" y="336" class="node-title" text-anchor="middle">Portfolio Dashboard</text>
+      <text x="190" y="356" class="node-sub" text-anchor="middle">open tickets · SLA · by tower</text>
+
+      <rect class="node" x="840" y="300" width="300" height="80" rx="2" />
+      <text x="990" y="336" class="node-title" text-anchor="middle">Completion Builder</text>
+      <text x="990" y="356" class="node-sub" text-anchor="middle">parts · time · photo record</text>
+
+      <!-- Row D: agentic pipeline -->
+      <rect class="node" x="460" y="460" width="190" height="100" rx="2" />
+      <text x="555" y="502" class="node-title" text-anchor="middle">Closure Drafter</text>
+      <text x="555" y="522" class="node-sub" text-anchor="middle">resident-facing summary</text>
+
+      <rect class="node" x="700" y="460" width="190" height="100" rx="2" />
+      <text x="795" y="502" class="node-title" text-anchor="middle">Cost Reconciler</text>
+      <text x="795" y="522" class="node-sub" text-anchor="middle">service-charge line item</text>
+
+      <rect class="node" x="940" y="460" width="190" height="100" rx="2" />
+      <text x="1035" y="502" class="node-title" text-anchor="middle">Dispute-Risk Reviewer</text>
+      <text x="1035" y="522" class="node-sub" text-anchor="middle">recommends, never closes</text>
+
+      <!-- Row E: gate -->
+      <polygon points="660,610 920,610 960,660 920,710 660,710 620,660" fill="#FFFFFF" stroke="#1C1815" stroke-width="1.8" />
+      <text x="790" y="654" class="gate-title" text-anchor="middle">VERIFICATION GATE</text>
+      <text x="790" y="672" class="gate-sub" text-anchor="middle">every claim must trace to the record</text>
+
+      <!-- Row F: outcomes -->
+      <rect x="560" y="740" width="220" height="70" rx="2" fill="#DCEAEC" stroke="#1F6E7A" stroke-width="1.4" />
+      <text x="670" y="770" class="node-title" text-anchor="middle" fill="#1C1815">Verified</text>
+      <text x="670" y="788" class="node-sub" text-anchor="middle">every claim record-backed</text>
+
+      <rect x="820" y="740" width="220" height="70" rx="2" fill="#F3E0DA" stroke="#9C3D26" stroke-width="1.4" />
+      <text x="930" y="770" class="node-title" text-anchor="middle" fill="#1C1815">Reopened</text>
+      <text x="930" y="788" class="node-sub" text-anchor="middle">claim unverifiable</text>
+
+      <!-- Row G: human checkpoint -->
+      <rect class="node" x="40" y="850" width="300" height="60" rx="2" />
+      <text x="190" y="876" class="node-title" text-anchor="middle">Service Charge Ledger</text>
+      <text x="190" y="894" class="node-sub" text-anchor="middle">owners' association reporting</text>
+
+      <rect class="node" x="560" y="850" width="260" height="60" rx="2" />
+      <text x="690" y="876" class="node-title" text-anchor="middle">Facilities Manager Sign-off</text>
+      <text x="690" y="894" class="node-sub" text-anchor="middle">nothing bills unreviewed</text>
+
+      <!-- edges -->
+      <line x1="190" y1="80" x2="190" y2="158" stroke="#6B6259" stroke-width="1.4" marker-end="url(#arrow-ink)" />
+      <text x="200" y="122" class="edge-label">new tickets</text>
+
+      <polyline points="590,80 590,110 250,110 250,158" fill="none" stroke="#6B6259" stroke-width="1.4" marker-end="url(#arrow-ink)" />
+      <text x="330" y="106" class="edge-label">continuous feed</text>
+
+      <polyline points="990,80 990,120 700,120 700,158" fill="none" stroke="#6B6259" stroke-width="1.4" marker-end="url(#arrow-ink)" />
+      <text x="820" y="116" class="edge-label">who's certified, free</text>
+
+      <line x1="340" y1="200" x2="438" y2="200" stroke="#3E5266" stroke-width="1.4" marker-end="url(#arrow-slate)" />
+      <text x="345" y="192" class="edge-label">classified ticket</text>
+
+      <line x1="740" y1="200" x2="838" y2="200" stroke="#3E5266" stroke-width="1.4" marker-end="url(#arrow-slate)" />
+      <text x="745" y="192" class="edge-label">technician + SLA</text>
+
+      <line x1="990" y1="240" x2="990" y2="298" stroke="#3E5266" stroke-width="1.4" marker-end="url(#arrow-slate)" />
+      <text x="1000" y="272" class="edge-label">per-ticket record</text>
+
+      <polyline points="990,240 990,270 190,270 190,298" fill="none" stroke="#6B6259" stroke-width="1.4" marker-end="url(#arrow-ink)" />
+      <text x="430" y="262" class="edge-label">work order</text>
+
+      <polyline points="990,380 990,410 555,410 555,458" fill="none" stroke="#B24C0D" stroke-width="1.4" marker-end="url(#arrow-orange)" />
+      <text x="760" y="404" class="edge-label-em">completion record</text>
+
+      <line x1="650" y1="510" x2="698" y2="510" stroke="#6B6259" stroke-width="1.4" marker-end="url(#arrow-ink)" />
+      <text x="653" y="502" class="edge-label">summary</text>
+
+      <line x1="890" y1="510" x2="938" y2="510" stroke="#6B6259" stroke-width="1.4" marker-end="url(#arrow-ink)" />
+      <text x="893" y="502" class="edge-label">line item</text>
+
+      <polyline points="1035,560 1035,585 860,585 860,608" fill="none" stroke="#6B6259" stroke-width="1.4" marker-end="url(#arrow-ink)" />
+      <text x="940" y="580" class="edge-label">checked summary</text>
+
+      <polyline points="1140,340 1170,340 1170,660 962,660" fill="none" stroke="#B24C0D" stroke-width="1.6" marker-end="url(#arrow-orange)" />
+      <text x="1080" y="648" class="edge-label-em" text-anchor="end">source record</text>
+
+      <line x1="660" y1="710" x2="672" y2="738" stroke="#1F6E7A" stroke-width="1.6" marker-end="url(#arrow-teal)" />
+      <text x="605" y="728" class="edge-label">verified</text>
+
+      <line x1="920" y1="710" x2="930" y2="738" stroke="#9C3D26" stroke-width="1.6" marker-end="url(#arrow-brick)" />
+      <text x="935" y="728" class="edge-label">reopen</text>
+
+      <line x1="670" y1="810" x2="688" y2="848" stroke="#6B6259" stroke-width="1.4" marker-end="url(#arrow-ink)" />
+      <text x="600" y="832" class="edge-label">confirm</text>
+
+      <polyline points="930,810 930,832 790,832 790,848" fill="none" stroke="#6B6259" stroke-width="1.4" marker-end="url(#arrow-ink)" />
+      <text x="850" y="824" class="edge-label">reassign &amp; retry</text>
+
+      <line x1="190" y1="380" x2="190" y2="848" stroke="#6B6259" stroke-width="1.4" marker-end="url(#arrow-ink)" />
+      <text x="200" y="600" class="edge-label">renders continuously, agents or not</text>
+    </svg>

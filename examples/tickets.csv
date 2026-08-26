@@ -1,0 +1,14 @@
+ticket_id,tower,unit,category,tenant_name,reported_at,technician_id,time_spent_minutes,parts_used,photo_ref,meter_reading,closed_at
+TCK-00001,Marina Tower A,1204,elevator,Dana Haddad,2026-08-24,,,,,,
+TCK-00002,Marina Tower A,0801,electrical,Nadia Haddad,2026-08-23,TCH-01,2,PART-050,PHOTO-01,,2026-08-24
+TCK-00003,Marina Tower B,1502,electrical,Shreya Farouk,2026-08-22,TCH-03,40,PART-077,,,2026-08-23
+TCK-00004,Marina Tower A,0303,ac,Rashid Aziz,2026-08-20,,,,,,
+TCK-00005,Marina Tower B,0910,ac,Bilal Farouk,2026-08-24,,,,,,
+TCK-00006,Marina Tower B,1120,ac,Daniel Aziz,2026-08-24,,,,,,
+TCK-00007,Marina Tower A,0417,ac,Maha Haddad,2026-08-19,TCH-04,50,PART-118,PHOTO-3303,,2026-08-20
+TCK-00008,Marina Tower B,0602,plumbing,Rawan Yousef,2026-08-24,TCH-02,35,PART-205;PART-206,PHOTO-3304,,2026-08-24
+TCK-00009,Marina Tower A,0705,common_area,Hind Mansoori,2026-08-22,,,,,,
+TCK-00010,Marina Tower B,1308,other,Adnan Farouk,2026-08-25,,,,,,
+TCK-00011,Marina Tower A,0212,landscaping,Priya Sharma,2026-08-24,,,,,,
+TCK-00012,Marina Tower B,0955,plumbing,Jamal Yousef,2026-13-40,,,,,,
+TCK-00013,Marina Tower A,1401,electrical,Hamad Aziz,2026-08-23,TCH-01,,,,,

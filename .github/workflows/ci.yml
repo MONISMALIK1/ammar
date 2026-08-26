@@ -1,0 +1,31 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ["3.10", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+
+      # Hermetic: the citation gate is verified on constructed task dicts, so
+      # CI needs no API key and cannot drift with model behaviour.
+      - name: tests
+        run: |
+          PYTHONPATH=src python tests/test_ammar.py
+          PYTHONPATH=src python tests/test_agents.py
+
+      # The citation gate is the safety guarantee. Assert it through the
+      # real CLI, along with the fixture bands and suspicious-completion
+      # pre-reopening.
+      - name: citation gate holds end to end
+        run: PYTHONPATH=src python tests/check_closures.py

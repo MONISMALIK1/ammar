@@ -1,0 +1,18 @@
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.DS_Store
+
+# Run output — contains tenant names, unit numbers, and drafted closure
+# text. Keep it out of the repo.
+closures.csv
+*.closures.csv
+tickets.csv
+!examples/tickets.csv
+technicians.csv
+!examples/technicians.csv
+tests/_tmp_*

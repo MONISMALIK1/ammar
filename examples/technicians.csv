@@ -1,0 +1,6 @@
+technician_id,name,trades,current_load
+TCH-01,Yusuf Rahman,ac;electrical,2
+TCH-02,Fatima Noor,plumbing;common_area,1
+TCH-03,Ali Karim,elevator;electrical,3
+TCH-04,Deepa Menon,ac;plumbing,0
+TCH-05,Omar Saleh,common_area;other,4
