@@ -122,6 +122,25 @@ Three things in that output are the reason the tool exists:
   load has caught up and the assignment switches — a test asserts this
   exact tie-break.
 
+## The console
+
+[ui/console.html](ui/console.html) is a self-contained, no-build dispatch
+console — open it in a browser directly. It renders the real, computed queue
+(bands, urgency points, dispatch matches, completion records — the exact
+output of `rules.assess()` against `examples/tickets.csv` and
+`examples/technicians.csv`, embedded as data) with a click-through ticket
+list and a case-review panel.
+
+Two of the completed tickets also carry **illustrative** closure text — a
+resident-facing summary, a service-charge line item, and a drafted
+recommendation — written by hand to demonstrate the console's states, never
+sent through a model. They're marked `agent` throughout, next to `computed`
+for anything the rules engine actually produced. One of them (`TCK-00008`)
+is deliberately written citing `[WO-00099]`, a work order its completion
+record doesn't contain, and it's selected by default on load: the point of
+the console is watching the Verification Gate catch it and reopen the
+ticket even though the drafted recommendation was "verified."
+
 ## Documentation
 
 - [docs/architecture.md](docs/architecture.md) — the enterprise architecture
@@ -192,5 +211,6 @@ src/ammar/
 examples/         13-ticket fixture: life-safety, suspicious completions,
                   load-balanced dispatch, and three deliberately malformed rows
 docs/             architecture diagram + the verification-gate safety argument
+ui/               the dispatch console -- open console.html directly, no build
 tests/            rule matching, citation logic, gate, CI guard
 ```

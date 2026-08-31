@@ -1,0 +1,796 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ammar Console</title>
+<style>
+  :root {
+    --bg: #F3F0EA;
+    --surface: #FFFFFF;
+    --surface-2: #EDE8DF;
+    --ink: #1C1815;
+    --ink-soft: #302A25;
+    --ink-muted: #6B6259;
+    --border: #DDD6CB;
+    --border-strong: #C4BAA9;
+    --slate: #3E5266;
+    --slate-soft: #E4E9EE;
+    --orange: #B24C0D;
+    --orange-soft: #F5E2D3;
+    --teal: #1F6E7A;
+    --teal-soft: #DCEAEC;
+    --brick: #9C3D26;
+    --brick-soft: #F3E0DA;
+    --font-display: -apple-system, "Helvetica Neue", Arial, sans-serif;
+    --font-body: -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    --font-mono: ui-monospace, "SF Mono", "Roboto Mono", "Cascadia Code", Consolas, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #171310;
+      --surface: #221D18;
+      --surface-2: #1C1712;
+      --ink: #F1EBE2;
+      --ink-soft: #D8CFC2;
+      --ink-muted: #A6998A;
+      --border: #3A3128;
+      --border-strong: #4C4032;
+      --slate: #85A0BC;
+      --slate-soft: #1E2A36;
+      --orange: #E88A45;
+      --orange-soft: #3A2515;
+      --teal: #5FBAC4;
+      --teal-soft: #16292B;
+      --brick: #E08064;
+      --brick-soft: #33201A;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #171310;
+    --surface: #221D18;
+    --surface-2: #1C1712;
+    --ink: #F1EBE2;
+    --ink-soft: #D8CFC2;
+    --ink-muted: #A6998A;
+    --border: #3A3128;
+    --border-strong: #4C4032;
+    --slate: #85A0BC;
+    --slate-soft: #1E2A36;
+    --orange: #E88A45;
+    --orange-soft: #3A2515;
+    --teal: #5FBAC4;
+    --teal-soft: #16292B;
+    --brick: #E08064;
+    --brick-soft: #33201A;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+
+  * { box-sizing: border-box; }
+  ::selection { background: var(--orange-soft); }
+
+  body {
+    background: var(--bg);
+    color: var(--ink-soft);
+    font-family: var(--font-body);
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .app {
+    max-width: 1360px;
+    margin: 0 auto;
+    padding: 20px clamp(16px, 3vw, 32px) 60px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  /* ---------- header ---------- */
+
+  .topbar {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px 24px;
+    padding-bottom: 4px;
+  }
+  .wordmark {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+  }
+  .wordmark h1 {
+    font-family: var(--font-display);
+    font-weight: 900;
+    letter-spacing: 0.01em;
+    font-size: 1.6rem;
+    color: var(--ink);
+    margin: 0;
+  }
+  .wordmark span {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--ink-muted);
+    letter-spacing: 0.02em;
+  }
+  .topbar-meta {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--ink-muted);
+  }
+  .topbar-meta strong { color: var(--ink); font-weight: 600; }
+  .sla-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border: 1px solid var(--border-strong);
+    border-radius: 3px;
+    background: var(--surface);
+  }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--teal); flex-shrink: 0; }
+
+  /* ---------- stat row ---------- */
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .stat {
+    background: var(--surface);
+    padding: 12px 16px;
+    cursor: pointer;
+    border: none;
+    text-align: left;
+    font-family: inherit;
+    color: inherit;
+    transition: background 100ms ease;
+  }
+  .stat:hover { background: var(--surface-2); }
+  .stat.active { background: var(--surface-2); box-shadow: inset 0 -2px 0 var(--stat-accent, var(--slate)); }
+  .stat-label {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-muted);
+    display: block;
+    margin-bottom: 6px;
+  }
+  .stat-value {
+    font-family: var(--font-mono);
+    font-size: 1.7rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink);
+  }
+  .stat[data-band="critical"] { --stat-accent: var(--brick); }
+  .stat[data-band="high"] { --stat-accent: var(--orange); }
+  .stat[data-band="medium"] { --stat-accent: var(--orange); }
+  .stat[data-band="low"] { --stat-accent: var(--ink-muted); }
+  .stat[data-band="verified"] { --stat-accent: var(--teal); }
+  .stat[data-band="reopened"] { --stat-accent: var(--brick); }
+
+  /* ---------- filter tabs ---------- */
+
+  .tabs {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 10px;
+  }
+  .tab {
+    font-family: var(--font-mono);
+    font-size: 0.76rem;
+    padding: 6px 12px;
+    border-radius: 3px;
+    border: 1px solid transparent;
+    background: none;
+    color: var(--ink-muted);
+    cursor: pointer;
+    transition: background 100ms ease, color 100ms ease;
+  }
+  .tab:hover { background: var(--surface-2); color: var(--ink-soft); }
+  .tab.active { background: var(--ink); color: var(--bg); }
+  .tab:focus-visible, .stat:focus-visible, button:focus-visible, .rowbtn:focus-visible {
+    outline: 2px solid var(--slate);
+    outline-offset: 1px;
+  }
+
+  /* ---------- console split ---------- */
+
+  .console {
+    display: grid;
+    grid-template-columns: minmax(360px, 440px) 1fr;
+    gap: 16px;
+    align-items: start;
+  }
+  @media (max-width: 880px) {
+    .console { grid-template-columns: 1fr; }
+  }
+
+  .queue {
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    background: var(--surface);
+    overflow: hidden;
+  }
+  .queue-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface-2);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ink-muted);
+  }
+  .queue-list {
+    max-height: 740px;
+    overflow-y: auto;
+  }
+  .rowbtn {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 10px 14px;
+    border: none;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    text-align: left;
+    font-family: inherit;
+    color: inherit;
+    cursor: pointer;
+    transition: background 100ms ease;
+  }
+  .rowbtn:last-child { border-bottom: none; }
+  .rowbtn:hover { background: var(--surface-2); }
+  .rowbtn.selected { background: var(--orange-soft); box-shadow: inset 2px 0 0 var(--orange); }
+  .rowbtn.not-queued { opacity: 0.62; }
+  .row-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .row-id { font-family: var(--font-mono); font-size: 0.8rem; font-weight: 600; color: var(--ink); }
+  .row-loc { font-size: 0.86rem; color: var(--ink-soft); }
+  .row-bottom { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .row-cat { font-family: var(--font-mono); font-size: 0.7rem; color: var(--ink-muted); text-transform: capitalize; }
+  .row-points { font-family: var(--font-mono); font-size: 0.78rem; font-variant-numeric: tabular-nums; color: var(--ink-muted); }
+
+  /* pills */
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+  }
+  .pill-critical { background: var(--brick-soft); color: var(--brick); }
+  .pill-high { background: var(--orange-soft); color: var(--orange); }
+  .pill-medium { background: var(--orange-soft); color: var(--orange); opacity: 0.85; }
+  .pill-low { background: var(--surface-2); color: var(--ink-muted); border: 1px solid var(--border); }
+  .pill-verified { background: var(--teal-soft); color: var(--teal); }
+  .pill-reopened { background: var(--brick-soft); color: var(--brick); }
+  .pill-notqueued { background: var(--surface-2); color: var(--ink-muted); border: 1px solid var(--border); }
+  .pill-safety { background: var(--brick-soft); color: var(--brick); }
+
+  /* ---------- detail panel ---------- */
+
+  .detail {
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    background: var(--surface);
+    padding: 20px 24px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-height: 400px;
+  }
+  .detail-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 16px;
+  }
+  .detail-id { font-family: var(--font-mono); font-size: 0.78rem; color: var(--ink-muted); margin-bottom: 4px; }
+  .detail-loc { font-family: var(--font-display); font-weight: 900; font-size: 1.3rem; color: var(--ink); }
+  .detail-badges { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .detail-score { font-family: var(--font-mono); font-size: 0.85rem; color: var(--ink-muted); }
+  .detail-score b { color: var(--ink); font-variant-numeric: tabular-nums; }
+
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-muted);
+    margin: 0 0 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-label .src-tag {
+    padding: 1px 6px;
+    border-radius: 2px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+  }
+  .src-computed { background: var(--slate-soft); color: var(--slate); }
+  .src-agent { background: var(--orange-soft); color: var(--orange); }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip {
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    padding: 3px 8px;
+    border-radius: 3px;
+    background: var(--slate-soft);
+    color: var(--slate);
+    border: 1px solid transparent;
+  }
+
+  .account p {
+    margin: 0 0 10px;
+    font-size: 0.95rem;
+    color: var(--ink-soft);
+  }
+  .account p:last-child { margin-bottom: 0; }
+  .account .field-label {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ink-muted);
+    display: block;
+    margin-bottom: 3px;
+  }
+  .cite {
+    font-family: var(--font-mono);
+    font-size: 0.86em;
+    padding: 0 3px;
+    border-radius: 2px;
+    background: var(--slate-soft);
+    color: var(--slate);
+  }
+  .cite-bad {
+    background: var(--brick-soft);
+    color: var(--brick);
+    text-decoration: underline wavy var(--brick);
+    text-underline-offset: 3px;
+  }
+
+  .verdict {
+    border-radius: 3px;
+    padding: 14px 16px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .verdict-verified { background: var(--teal-soft); border: 1px solid var(--teal); }
+  .verdict-reopened { background: var(--brick-soft); border: 1px solid var(--brick); }
+  .verdict-icon { font-family: var(--font-mono); font-weight: 700; font-size: 0.9rem; flex-shrink: 0; }
+  .verdict-verified .verdict-icon { color: var(--teal); }
+  .verdict-reopened .verdict-icon { color: var(--brick); }
+  .verdict-title { font-weight: 600; color: var(--ink); margin-bottom: 3px; }
+  .verdict-reason { font-size: 0.88rem; color: var(--ink-soft); }
+
+  .empty-note {
+    font-size: 0.92rem;
+    color: var(--ink-muted);
+    background: var(--surface-2);
+    border: 1px dashed var(--border-strong);
+    border-radius: 3px;
+    padding: 14px 16px;
+  }
+
+  .actions { display: flex; gap: 8px; flex-wrap: wrap; padding-top: 4px; border-top: 1px solid var(--border); margin-top: 4px; }
+  .btn {
+    font-family: var(--font-mono);
+    font-size: 0.76rem;
+    font-weight: 600;
+    padding: 8px 14px;
+    border-radius: 3px;
+    border: 1px solid var(--border-strong);
+    background: var(--surface);
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: background 100ms ease, border-color 100ms ease;
+  }
+  .btn:hover { background: var(--surface-2); }
+  .btn-primary { background: var(--ink); border-color: var(--ink); color: var(--bg); }
+  .btn-primary:hover { opacity: 0.9; }
+  .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+  .action-note {
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    color: var(--ink-muted);
+    align-self: center;
+  }
+
+  .footnote {
+    font-size: 0.82rem;
+    color: var(--ink-muted);
+    border-top: 1px solid var(--border);
+    padding-top: 14px;
+  }
+  .footnote code { font-family: var(--font-mono); color: var(--ink-soft); }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <div class="topbar">
+    <div class="wordmark">
+      <h1>AMMAR</h1>
+      <span>tower maintenance dispatch &middot; console</span>
+    </div>
+    <div class="topbar-meta">
+      <span>Queue as of <strong>2026-08-25</strong></span>
+      <span class="sla-chip"><span class="dot"></span>critical 2h &middot; high 8h SLA</span>
+    </div>
+  </div>
+
+  <div class="stats" id="stats" role="tablist" aria-label="Filter the queue"></div>
+
+  <div class="tabs" id="tabs" role="tablist" aria-label="Filter by status"></div>
+
+  <div class="console">
+    <div class="queue">
+      <div class="queue-head">
+        <span id="queue-count">13 tickets</span>
+        <span>sorted by severity</span>
+      </div>
+      <div class="queue-list" id="queue-list"></div>
+    </div>
+
+    <div class="detail" id="detail"></div>
+  </div>
+
+  <p class="footnote">
+    Bands, urgency points, dispatch matches, and completion records are
+    computed by <code>rules.py</code> in the
+    <a href="https://github.com/MONISMALIK1/ammar" style="color:inherit">ammar</a>
+    repository &mdash; this console renders that exact output. Closure
+    accounts and recommendations (closure drafter, cost reconciler,
+    reviewer) are illustrative sample text written to demonstrate the
+    console, not live model output &mdash; marked
+    <span class="src-tag src-agent">agent</span> throughout, versus
+    <span class="src-tag src-computed">computed</span> for anything from the
+    rules engine.
+  </p>
+
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  // ---- computed data: exact output of rules.assess() against
+  // examples/tickets.csv + examples/technicians.csv, dumped from the real
+  // Python engine. ----
+  var ORDERS = [
+    {ticket_id:"TCK-00003",tower:"Marina Tower B",unit:"1502",category:"electrical",tenant_name:"Shreya Farouk",band:"critical",urgency_points:51,life_safety:true,dispatched_technician_id:"",completion_technician_id:"TCH-03",parts_used:["PART-077"],photo_ref:"",has_completion:true,suspicious:true,suspicious_reason:"no photo reference on a 'electrical' ticket, which requires one",evidence:["PART-077","TCH-03","TCK-00003","WO-00003"],work_order_id:"WO-00003"},
+    {ticket_id:"TCK-00002",tower:"Marina Tower A",unit:"0801",category:"electrical",tenant_name:"Nadia Haddad",band:"critical",urgency_points:43,life_safety:true,dispatched_technician_id:"",completion_technician_id:"TCH-01",parts_used:["PART-050"],photo_ref:"PHOTO-01",has_completion:true,suspicious:true,suspicious_reason:"closed in 2 minute(s), below the 5-minute floor for a real repair",evidence:["PART-050","PHOTO-01","TCH-01","TCK-00002","WO-00002"],work_order_id:"WO-00002"},
+    {ticket_id:"TCK-00013",tower:"Marina Tower A",unit:"1401",category:"electrical",tenant_name:"Hamad Aziz",band:"critical",urgency_points:43,life_safety:true,dispatched_technician_id:"TCH-01",completion_technician_id:"",parts_used:[],photo_ref:"",has_completion:false,suspicious:false,suspicious_reason:"",evidence:[],work_order_id:"WO-00013"},
+    {ticket_id:"TCK-00001",tower:"Marina Tower A",unit:"1204",category:"elevator",tenant_name:"Dana Haddad",band:"critical",urgency_points:40,life_safety:true,dispatched_technician_id:"TCH-03",completion_technician_id:"",parts_used:[],photo_ref:"",has_completion:false,suspicious:false,suspicious_reason:"",evidence:[],work_order_id:"WO-00001"},
+    {ticket_id:"TCK-00007",tower:"Marina Tower A",unit:"0417",category:"ac",tenant_name:"Maha Haddad",band:"high",urgency_points:70,life_safety:false,dispatched_technician_id:"",completion_technician_id:"TCH-04",parts_used:["PART-118"],photo_ref:"PHOTO-3303",has_completion:true,suspicious:false,suspicious_reason:"",evidence:["PART-118","PHOTO-3303","TCH-04","TCK-00007","WO-00007"],work_order_id:"WO-00007"},
+    {ticket_id:"TCK-00004",tower:"Marina Tower A",unit:"0303",category:"ac",tenant_name:"Rashid Aziz",band:"high",urgency_points:62,life_safety:false,dispatched_technician_id:"TCH-04",completion_technician_id:"",parts_used:[],photo_ref:"",has_completion:false,suspicious:false,suspicious_reason:"",evidence:[],work_order_id:"WO-00004"},
+    {ticket_id:"TCK-00005",tower:"Marina Tower B",unit:"0910",category:"ac",tenant_name:"Bilal Farouk",band:"medium",urgency_points:30,life_safety:false,dispatched_technician_id:"TCH-04",completion_technician_id:"",parts_used:[],photo_ref:"",has_completion:false,suspicious:false,suspicious_reason:"",evidence:[],work_order_id:"WO-00005"},
+    {ticket_id:"TCK-00006",tower:"Marina Tower B",unit:"1120",category:"ac",tenant_name:"Daniel Aziz",band:"medium",urgency_points:30,life_safety:false,dispatched_technician_id:"TCH-01",completion_technician_id:"",parts_used:[],photo_ref:"",has_completion:false,suspicious:false,suspicious_reason:"",evidence:[],work_order_id:"WO-00006"},
+    {ticket_id:"TCK-00009",tower:"Marina Tower A",unit:"0705",category:"common_area",tenant_name:"Hind Mansoori",band:"medium",urgency_points:26,life_safety:false,dispatched_technician_id:"TCH-02",completion_technician_id:"",parts_used:[],photo_ref:"",has_completion:false,suspicious:false,suspicious_reason:"",evidence:[],work_order_id:"WO-00009"},
+    {ticket_id:"TCK-00008",tower:"Marina Tower B",unit:"0602",category:"plumbing",tenant_name:"Rawan Yousef",band:"medium",urgency_points:25,life_safety:false,dispatched_technician_id:"",completion_technician_id:"TCH-02",parts_used:["PART-205","PART-206"],photo_ref:"PHOTO-3304",has_completion:true,suspicious:false,suspicious_reason:"",evidence:["PART-205","PART-206","PHOTO-3304","TCH-02","TCK-00008","WO-00008"],work_order_id:"WO-00008"},
+    {ticket_id:"TCK-00012",tower:"Marina Tower B",unit:"0955",category:"plumbing",tenant_name:"Jamal Yousef",band:"medium",urgency_points:25,life_safety:false,dispatched_technician_id:"TCH-02",completion_technician_id:"",parts_used:[],photo_ref:"",has_completion:false,suspicious:false,suspicious_reason:"",evidence:[],work_order_id:"WO-00012"},
+    {ticket_id:"TCK-00010",tower:"Marina Tower B",unit:"1308",category:"other",tenant_name:"Adnan Farouk",band:"low",urgency_points:5,life_safety:false,dispatched_technician_id:"TCH-05",completion_technician_id:"",parts_used:[],photo_ref:"",has_completion:false,suspicious:false,suspicious_reason:"",evidence:[],work_order_id:"WO-00010"},
+    {ticket_id:"TCK-00011",tower:"Marina Tower A",unit:"0212",category:"landscaping",tenant_name:"Priya Sharma",band:"low",urgency_points:0,life_safety:false,dispatched_technician_id:"",completion_technician_id:"",parts_used:[],photo_ref:"",has_completion:false,suspicious:false,suspicious_reason:"",evidence:[],work_order_id:"WO-00011"}
+  ];
+
+  // ---- illustrative closure accounts: sample text written to demonstrate
+  // the console's states. Never sent through a model. Citations are checked
+  // against each ticket's real `evidence` array above at render time,
+  // exactly the way agents.check_citations() does. ----
+  var CLOSURE = {
+    "TCK-00007": {
+      summary: "The AC unit in [TCK-00007] was serviced by [TCH-04], who replaced the failed capacitor logged as [PART-118]; before-and-after condition is documented in [PHOTO-3303]. The unit is cooling normally again.",
+      line_item: "[PART-118] fitted by [TCH-04] against [WO-00007]; standard AC callout labour.",
+      recommendation: "verified",
+      rationale: "Completion record for [WO-00007] is complete: a logged part, a photo reference, and a plausible service duration. Recommend verifying.",
+      status: "verified",
+      reason: "Every citation traces to the completion record; reviewer recommended verified."
+    },
+    "TCK-00008": {
+      summary: "The leak reported in [TCK-00008] was repaired by [TCH-02], who replaced the fittings logged as [PART-205] and [PART-206], consistent with the resolution already confirmed on [WO-00099].",
+      line_item: "[PART-205] and [PART-206] fitted by [TCH-02] against [WO-00008].",
+      recommendation: "verified",
+      rationale: "Photo reference [PHOTO-3304] and parts [PART-205] and [PART-206] support the repair on [WO-00008]. Recommend verifying.",
+      status: "reopened",
+      reason: "Model cited a record with no computed source: WO-00099.",
+      ungrounded: ["WO-00099"]
+    }
+  };
+
+  var BAND_LABEL = { critical: "Critical", high: "High", medium: "Medium", low: "Low" };
+  var byId = {};
+  ORDERS.forEach(function (w) { byId[w.ticket_id] = w; });
+
+  var state = { band: "all", status: "all", selected: "TCK-00008" };
+
+  function computedStatus(w) {
+    if (w.suspicious) return "reopened";
+    var c = CLOSURE[w.ticket_id];
+    if (!c) return w.has_completion ? "not-queued" : "not-queued";
+    return c.status;
+  }
+
+  function escapeHtml(s) {
+    return s.replace(/[&<>"']/g, function (c) {
+      return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c];
+    });
+  }
+
+  function highlightCitations(text, evidence) {
+    var evidenceSet = {};
+    evidence.forEach(function (id) { evidenceSet[id] = true; });
+    return escapeHtml(text).replace(/\[([A-Z]{2,6}-[A-Z0-9]+)\]/g, function (m, id) {
+      var cls = evidenceSet[id] ? "cite" : "cite-bad";
+      var title = evidenceSet[id] ? "" : ' title="not in this ticket’s completion record"';
+      return '<span class="' + cls + '"' + title + '>[' + id + ']</span>';
+    });
+  }
+
+  function renderStats() {
+    var counts = { critical: 0, high: 0, medium: 0, low: 0 };
+    ORDERS.forEach(function (w) { counts[w.band]++; });
+    var verifiedN = 0, reopenedN = 0;
+    ORDERS.forEach(function (w) {
+      var s = computedStatus(w);
+      if (s === "verified") verifiedN++;
+      if (s === "reopened") reopenedN++;
+    });
+    var tiles = [
+      { key: "band:critical", band: "critical", label: "Critical", value: counts.critical },
+      { key: "band:high", band: "high", label: "High", value: counts.high },
+      { key: "band:medium", band: "medium", label: "Medium", value: counts.medium },
+      { key: "band:low", band: "low", label: "Low", value: counts.low },
+      { key: "status:verified", band: "verified", label: "Verified", value: verifiedN },
+      { key: "status:reopened", band: "reopened", label: "Reopened", value: reopenedN }
+    ];
+    var html = tiles.map(function (t) {
+      var active = (t.key === "band:" + state.band) || (t.key === "status:" + state.status);
+      return '<button class="stat' + (active ? " active" : "") + '" data-key="' + t.key +
+        '" data-band="' + t.band + '"><span class="stat-label">' + t.label +
+        '</span><span class="stat-value">' + t.value + "</span></button>";
+    }).join("");
+    document.getElementById("stats").innerHTML = html;
+    Array.prototype.forEach.call(document.querySelectorAll(".stat"), function (btn) {
+      btn.addEventListener("click", function () {
+        var key = btn.getAttribute("data-key");
+        var parts = key.split(":");
+        state.band = "all"; state.status = "all";
+        if (parts[0] === "band") state.band = parts[1]; else state.status = parts[1];
+        render();
+      });
+    });
+  }
+
+  function renderTabs() {
+    var tabs = [
+      { key: "all", label: "All" },
+      { key: "band:critical", label: "Critical" },
+      { key: "band:high", label: "High" },
+      { key: "band:medium", label: "Medium" },
+      { key: "band:low", label: "Low" },
+      { key: "status:verified", label: "Verified" },
+      { key: "status:reopened", label: "Reopened" },
+      { key: "status:not-queued", label: "Not queued" }
+    ];
+    var html = tabs.map(function (t) {
+      var active = (t.key === "all" && state.band === "all" && state.status === "all") ||
+        (t.key === "band:" + state.band) || (t.key === "status:" + state.status);
+      return '<button class="tab' + (active ? " active" : "") + '" data-key="' + t.key + '">' + t.label + "</button>";
+    }).join("");
+    document.getElementById("tabs").innerHTML = html;
+    Array.prototype.forEach.call(document.querySelectorAll(".tab"), function (btn) {
+      btn.addEventListener("click", function () {
+        var key = btn.getAttribute("data-key");
+        state.band = "all"; state.status = "all";
+        if (key !== "all") {
+          var parts = key.split(":");
+          if (parts[0] === "band") state.band = parts[1]; else state.status = parts[1];
+        }
+        render();
+      });
+    });
+  }
+
+  function filteredOrders() {
+    return ORDERS.filter(function (w) {
+      if (state.band !== "all" && w.band !== state.band) return false;
+      if (state.status !== "all" && computedStatus(w) !== state.status) return false;
+      return true;
+    });
+  }
+
+  function pillFor(status) {
+    if (status === "verified") return '<span class="pill pill-verified">Verified</span>';
+    if (status === "reopened") return '<span class="pill pill-reopened">Reopened</span>';
+    return '<span class="pill pill-notqueued">Not queued</span>';
+  }
+
+  function renderQueue() {
+    var orders = filteredOrders();
+    document.getElementById("queue-count").textContent = orders.length + " ticket" + (orders.length === 1 ? "" : "s");
+    if (!orders.length) {
+      document.getElementById("queue-list").innerHTML =
+        '<div class="empty-note" style="margin:14px;">No tickets match this filter.</div>';
+      return;
+    }
+    var html = orders.map(function (w) {
+      var status = computedStatus(w);
+      var sel = w.ticket_id === state.selected ? " selected" : "";
+      var notQueued = status === "not-queued" ? " not-queued" : "";
+      var who = w.has_completion ? w.completion_technician_id : (w.dispatched_technician_id || "unassigned");
+      return (
+        '<button class="rowbtn' + sel + notQueued + '" data-id="' + w.ticket_id + '">' +
+        '<div class="row-top">' +
+        '<span class="row-id">' + w.ticket_id + "</span>" +
+        '<span class="pill pill-' + w.band + '">' + BAND_LABEL[w.band] + (w.life_safety ? " • safety" : "") + "</span>" +
+        "</div>" +
+        '<div class="row-loc">' + escapeHtml(w.tower) + " / " + escapeHtml(w.unit) + "</div>" +
+        '<div class="row-bottom">' +
+        '<span class="row-cat">' + escapeHtml(w.category) + " &middot; " + escapeHtml(who) + "</span>" +
+        '<span class="row-points">' + w.urgency_points + " pts</span>" +
+        "</div>" +
+        '<div class="row-bottom">' + pillFor(status) + "<span></span></div>" +
+        "</button>"
+      );
+    }).join("");
+    document.getElementById("queue-list").innerHTML = html;
+    Array.prototype.forEach.call(document.querySelectorAll(".rowbtn"), function (btn) {
+      btn.addEventListener("click", function () {
+        state.selected = btn.getAttribute("data-id");
+        render();
+      });
+    });
+  }
+
+  function renderDetail() {
+    var w = byId[state.selected];
+    var el = document.getElementById("detail");
+    if (!w) {
+      el.innerHTML = '<div class="empty-note">Select a ticket from the queue to review it.</div>';
+      return;
+    }
+
+    var head =
+      '<div class="detail-head">' +
+      '<div><div class="detail-id">' + w.ticket_id + " &middot; " + w.work_order_id + " &middot; " + escapeHtml(w.tenant_name) + '</div>' +
+      '<div class="detail-loc">' + escapeHtml(w.tower) + " / " + escapeHtml(w.unit) + "</div></div>" +
+      '<div class="detail-badges">' +
+      '<span class="pill pill-' + w.band + '">' + BAND_LABEL[w.band] + " band</span>" +
+      (w.life_safety ? '<span class="pill pill-safety">Life-safety</span>' : "") +
+      '<span class="detail-score">' + escapeHtml(w.category) + ' &middot; <b>' + w.urgency_points + '</b> points</span>' +
+      "</div></div>";
+
+    var body = head;
+
+    if (!w.has_completion) {
+      body +=
+        '<div><p class="section-label"><span class="src-tag src-computed">computed</span>Dispatch</p>' +
+        (w.dispatched_technician_id
+          ? '<div class="chips"><span class="chip">' + w.dispatched_technician_id + " assigned</span></div>"
+          : '<div class="empty-note">No qualified technician is available under the current load cap.</div>') +
+        "</div>";
+      body += '<div class="empty-note">Awaiting the technician’s completion record &mdash; not yet ' +
+        "queued for closure review.</div>";
+      el.innerHTML = body;
+      return;
+    }
+
+    var evidence =
+      '<div><p class="section-label"><span class="src-tag src-computed">computed</span>Completion record</p>' +
+      '<div class="chips">' + w.evidence.map(function (id) {
+        return '<span class="chip">[' + id + "]</span>";
+      }).join("") + "</div></div>";
+    body += evidence;
+
+    if (w.suspicious) {
+      body +=
+        '<div class="verdict verdict-reopened"><span class="verdict-icon">&#9632;</span>' +
+        '<div><div class="verdict-title">Reopened</div><div class="verdict-reason">' +
+        "Deterministic completion-integrity check failed &mdash; no model call needed: " +
+        escapeHtml(w.suspicious_reason) + "</div></div></div>";
+      el.innerHTML = body;
+      return;
+    }
+
+    var c = CLOSURE[w.ticket_id];
+    if (!c) {
+      body += '<div class="empty-note">This ticket would be queued for the closure pipeline in a live run; ' +
+        "no illustrative account was written for it in this demo.</div>";
+      el.innerHTML = body;
+      return;
+    }
+
+    body +=
+      '<div><p class="section-label"><span class="src-tag src-agent">agent</span>Closure account</p>' +
+      '<div class="account">' +
+      '<span class="field-label">Resident-facing summary</span><p>' + highlightCitations(c.summary, w.evidence) + "</p>" +
+      '<span class="field-label">Service-charge line item</span><p>' + highlightCitations(c.line_item, w.evidence) + "</p>" +
+      '<span class="field-label">Reviewer recommendation: ' + c.recommendation + '</span>' +
+      '<p>' + highlightCitations(c.rationale, w.evidence) + "</p>" +
+      "</div></div>";
+
+    var verdictClass = c.status === "verified" ? "verdict-verified" : "verdict-reopened";
+    var icon = c.status === "verified" ? "&#10003;" : "&#9632;";
+    body +=
+      '<div class="verdict ' + verdictClass + '"><span class="verdict-icon">' + icon + "</span>" +
+      '<div><div class="verdict-title">' + (c.status === "verified" ? "Verified" : "Reopened") + " by the Verification Gate</div>" +
+      '<div class="verdict-reason">' + highlightCitations(c.reason, w.evidence) + "</div></div></div>";
+
+    var confirmLabel = c.status === "verified" ? "Confirm & post to ledger" : "Reassign for re-inspection";
+    body +=
+      '<div class="actions">' +
+      '<button class="btn btn-primary" data-action="confirm">' + confirmLabel + "</button>" +
+      '<button class="btn" data-action="override">' + (c.status === "verified" ? "Reopen anyway" : "Verify anyway") + "</button>" +
+      '<span class="action-note">Sole authority: the facilities manager, always.</span>' +
+      "</div>";
+
+    el.innerHTML = body;
+
+    Array.prototype.forEach.call(el.querySelectorAll("[data-action]"), function (btn) {
+      btn.addEventListener("click", function () {
+        var note = document.createElement("span");
+        note.className = "action-note";
+        note.style.color = "var(--teal)";
+        note.textContent = "Recorded locally — no backend in this demo.";
+        btn.parentNode.appendChild(note);
+        Array.prototype.forEach.call(el.querySelectorAll("[data-action]"), function (b) { b.disabled = true; });
+      });
+    });
+  }
+
+  function render() {
+    renderStats();
+    renderTabs();
+    renderQueue();
+    renderDetail();
+  }
+
+  render();
+})();
+</script>
+
+</body>
+</html>
