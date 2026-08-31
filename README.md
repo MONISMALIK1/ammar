@@ -128,8 +128,16 @@ Three things in that output are the reason the tool exists:
 console — open it in a browser directly. It renders the real, computed queue
 (bands, urgency points, dispatch matches, completion records — the exact
 output of `rules.assess()` against `examples/tickets.csv` and
-`examples/technicians.csv`, embedded as data) with a click-through ticket
-list and a case-review panel.
+`examples/technicians.csv`, embedded as data), laid out as **four screens
+that map one-to-one onto the architecture diagram's stages**, each headed by
+the diagram's own node names so the two can be read side by side:
+
+| Screen | Diagram stage | What it shows |
+|---|---|---|
+| Dashboard | Portfolio Dashboard | Band mix, by-tower breakdown, queue health — the lane that renders every run, agents or not |
+| Triage & Dispatch | Triage Engine → Dispatch Matching → Work Order | Every open ticket, its computed urgency band, and its matched technician |
+| Case Review | Completion Builder → Closure Drafter → Cost Reconciler → Dispute-Risk Reviewer → Verification Gate | Completed tickets, the three agents as distinct numbered stations, and the gate's verdict |
+| Ledger & Sign-off | Verified/Reopened → Service Charge Ledger / Facilities Manager Sign-off | What's ready to post, and what's waiting on a human decision |
 
 Two of the completed tickets also carry **illustrative** closure text — a
 resident-facing summary, a service-charge line item, and a drafted
@@ -137,9 +145,9 @@ recommendation — written by hand to demonstrate the console's states, never
 sent through a model. They're marked `agent` throughout, next to `computed`
 for anything the rules engine actually produced. One of them (`TCK-00008`)
 is deliberately written citing `[WO-00099]`, a work order its completion
-record doesn't contain, and it's selected by default on load: the point of
-the console is watching the Verification Gate catch it and reopen the
-ticket even though the drafted recommendation was "verified."
+record doesn't contain; open Case Review and select it to watch the
+Verification Gate catch it and reopen the ticket even though the drafted
+recommendation was "verified."
 
 ## Documentation
 

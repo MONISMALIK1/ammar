@@ -101,11 +101,7 @@
     gap: 10px 24px;
     padding-bottom: 4px;
   }
-  .wordmark {
-    display: flex;
-    align-items: baseline;
-    gap: 12px;
-  }
+  .wordmark { display: flex; align-items: baseline; gap: 12px; }
   .wordmark h1 {
     font-family: var(--font-display);
     font-weight: 900;
@@ -114,165 +110,151 @@
     color: var(--ink);
     margin: 0;
   }
-  .wordmark span {
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    color: var(--ink-muted);
-    letter-spacing: 0.02em;
-  }
+  .wordmark span { font-family: var(--font-mono); font-size: 0.72rem; color: var(--ink-muted); }
   .topbar-meta {
-    display: flex;
-    align-items: center;
-    gap: 18px;
-    font-family: var(--font-mono);
-    font-size: 0.78rem;
-    color: var(--ink-muted);
+    display: flex; align-items: center; gap: 18px;
+    font-family: var(--font-mono); font-size: 0.78rem; color: var(--ink-muted);
   }
   .topbar-meta strong { color: var(--ink); font-weight: 600; }
-  .sla-chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 4px 10px;
-    border: 1px solid var(--border-strong);
+
+  /* ---------- screen nav (mirrors the architecture's stages) ---------- */
+
+  .screen-nav {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+  @media (max-width: 760px) { .screen-nav { grid-template-columns: 1fr 1fr; } }
+  .screen-btn {
+    text-align: left;
+    padding: 12px 16px;
+    border: 1px solid var(--border);
     border-radius: 3px;
     background: var(--surface);
+    color: var(--ink-soft);
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 100ms ease, border-color 100ms ease;
   }
-  .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--teal); flex-shrink: 0; }
+  .screen-btn:hover { background: var(--surface-2); }
+  .screen-btn.active {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--bg);
+  }
+  .screen-btn.active .screen-num { color: var(--orange); }
+  .screen-btn.active .screen-stage { color: var(--bg); opacity: 0.7; }
+  .screen-num {
+    font-family: var(--font-mono); font-size: 0.7rem; font-weight: 700;
+    color: var(--orange); display: block; margin-bottom: 4px;
+  }
+  .screen-title { font-family: var(--font-display); font-weight: 800; font-size: 1rem; }
+  .screen-stage {
+    font-family: var(--font-mono); font-size: 0.68rem; color: var(--ink-muted);
+    display: block; margin-top: 3px;
+  }
 
-  /* ---------- stat row ---------- */
+  /* ---------- stage badges (diagram node names, verbatim) ---------- */
+
+  .stage-trail {
+    display: flex; align-items: center; flex-wrap: wrap; gap: 6px;
+    font-family: var(--font-mono); font-size: 0.72rem;
+  }
+  .stage-badge {
+    padding: 3px 9px; border-radius: 999px; white-space: nowrap;
+    background: var(--slate-soft); color: var(--slate);
+  }
+  .stage-badge.agent { background: var(--orange-soft); color: var(--orange); }
+  .stage-badge.gate { background: var(--ink); color: var(--bg); font-weight: 700; }
+  .stage-arrow { color: var(--ink-muted); }
+  .screen-head {
+    display: flex; flex-direction: column; gap: 8px;
+    padding-bottom: 14px; border-bottom: 1px solid var(--border);
+  }
+  .screen-head h2 {
+    font-family: var(--font-display); font-weight: 900; font-size: 1.3rem;
+    color: var(--ink); margin: 0;
+  }
+  .screen-desc { color: var(--ink-muted); font-size: 0.9rem; max-width: 70ch; }
+
+  /* ---------- stat tiles ---------- */
 
   .stats {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-    gap: 1px;
-    background: var(--border);
-    border: 1px solid var(--border);
-    border-radius: 3px;
-    overflow: hidden;
+    gap: 1px; background: var(--border); border: 1px solid var(--border);
+    border-radius: 3px; overflow: hidden;
   }
-  .stat {
-    background: var(--surface);
-    padding: 12px 16px;
-    cursor: pointer;
-    border: none;
-    text-align: left;
-    font-family: inherit;
-    color: inherit;
-    transition: background 100ms ease;
-  }
-  .stat:hover { background: var(--surface-2); }
-  .stat.active { background: var(--surface-2); box-shadow: inset 0 -2px 0 var(--stat-accent, var(--slate)); }
+  .stat { background: var(--surface); padding: 14px 16px; }
   .stat-label {
-    font-family: var(--font-mono);
-    font-size: 0.68rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--ink-muted);
-    display: block;
-    margin-bottom: 6px;
+    font-family: var(--font-mono); font-size: 0.68rem; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--ink-muted); display: block; margin-bottom: 6px;
   }
   .stat-value {
-    font-family: var(--font-mono);
-    font-size: 1.7rem;
-    font-weight: 600;
+    font-family: var(--font-mono); font-size: 1.7rem; font-weight: 600;
+    font-variant-numeric: tabular-nums; color: var(--ink);
+  }
+  .stat.accent-critical { box-shadow: inset 0 -2px 0 var(--brick); }
+  .stat.accent-high, .stat.accent-medium { box-shadow: inset 0 -2px 0 var(--orange); }
+  .stat.accent-low { box-shadow: inset 0 -2px 0 var(--ink-muted); }
+  .stat.accent-verified { box-shadow: inset 0 -2px 0 var(--teal); }
+  .stat.accent-reopened { box-shadow: inset 0 -2px 0 var(--brick); }
+
+  /* ---------- tower breakdown table ---------- */
+
+  .table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 3px; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+  th {
+    font-family: var(--font-mono); font-size: 0.68rem; text-transform: uppercase;
+    letter-spacing: 0.06em; color: var(--ink-muted); text-align: left;
+    padding: 10px 14px; background: var(--surface-2); border-bottom: 1px solid var(--border);
+  }
+  td {
+    padding: 10px 14px; border-bottom: 1px solid var(--border); color: var(--ink-soft);
     font-variant-numeric: tabular-nums;
-    color: var(--ink);
   }
-  .stat[data-band="critical"] { --stat-accent: var(--brick); }
-  .stat[data-band="high"] { --stat-accent: var(--orange); }
-  .stat[data-band="medium"] { --stat-accent: var(--orange); }
-  .stat[data-band="low"] { --stat-accent: var(--ink-muted); }
-  .stat[data-band="verified"] { --stat-accent: var(--teal); }
-  .stat[data-band="reopened"] { --stat-accent: var(--brick); }
+  tr:last-child td { border-bottom: none; }
+  td.num, th.num { text-align: right; }
 
-  /* ---------- filter tabs ---------- */
+  /* ---------- queue / filter tabs ---------- */
 
-  .tabs {
-    display: flex;
-    gap: 4px;
-    flex-wrap: wrap;
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 10px;
+  .subtabs { display: flex; gap: 4px; flex-wrap: wrap; }
+  .subtab {
+    font-family: var(--font-mono); font-size: 0.74rem; padding: 5px 11px;
+    border-radius: 3px; border: 1px solid var(--border); background: var(--surface);
+    color: var(--ink-muted); cursor: pointer; transition: background 100ms ease;
   }
-  .tab {
-    font-family: var(--font-mono);
-    font-size: 0.76rem;
-    padding: 6px 12px;
-    border-radius: 3px;
-    border: 1px solid transparent;
-    background: none;
-    color: var(--ink-muted);
-    cursor: pointer;
-    transition: background 100ms ease, color 100ms ease;
-  }
-  .tab:hover { background: var(--surface-2); color: var(--ink-soft); }
-  .tab.active { background: var(--ink); color: var(--bg); }
-  .tab:focus-visible, .stat:focus-visible, button:focus-visible, .rowbtn:focus-visible {
-    outline: 2px solid var(--slate);
-    outline-offset: 1px;
-  }
+  .subtab:hover { background: var(--surface-2); }
+  .subtab.active { background: var(--ink); border-color: var(--ink); color: var(--bg); }
 
-  /* ---------- console split ---------- */
+  .screen-btn:focus-visible, .subtab:focus-visible, button:focus-visible, .rowbtn:focus-visible {
+    outline: 2px solid var(--slate); outline-offset: 1px;
+  }
 
   .console {
-    display: grid;
-    grid-template-columns: minmax(360px, 440px) 1fr;
-    gap: 16px;
-    align-items: start;
+    display: grid; grid-template-columns: minmax(340px, 420px) 1fr;
+    gap: 16px; align-items: start;
   }
-  @media (max-width: 880px) {
-    .console { grid-template-columns: 1fr; }
-  }
+  @media (max-width: 880px) { .console { grid-template-columns: 1fr; } }
 
-  .queue {
-    border: 1px solid var(--border);
-    border-radius: 3px;
-    background: var(--surface);
-    overflow: hidden;
-  }
+  .queue { border: 1px solid var(--border); border-radius: 3px; background: var(--surface); overflow: hidden; }
   .queue-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 14px;
-    border-bottom: 1px solid var(--border);
-    background: var(--surface-2);
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--ink-muted);
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px 14px; border-bottom: 1px solid var(--border); background: var(--surface-2);
+    font-family: var(--font-mono); font-size: 0.72rem; text-transform: uppercase;
+    letter-spacing: 0.06em; color: var(--ink-muted);
   }
-  .queue-list {
-    max-height: 740px;
-    overflow-y: auto;
-  }
+  .queue-list { max-height: 640px; overflow-y: auto; }
   .rowbtn {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    padding: 10px 14px;
-    border: none;
-    border-bottom: 1px solid var(--border);
-    background: var(--surface);
-    text-align: left;
-    font-family: inherit;
-    color: inherit;
-    cursor: pointer;
-    transition: background 100ms ease;
+    width: 100%; display: flex; flex-direction: column; gap: 6px;
+    padding: 10px 14px; border: none; border-bottom: 1px solid var(--border);
+    background: var(--surface); text-align: left; font-family: inherit;
+    color: inherit; cursor: pointer; transition: background 100ms ease;
   }
   .rowbtn:last-child { border-bottom: none; }
   .rowbtn:hover { background: var(--surface-2); }
   .rowbtn.selected { background: var(--orange-soft); box-shadow: inset 2px 0 0 var(--orange); }
-  .rowbtn.not-queued { opacity: 0.62; }
-  .row-top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-  }
+  .row-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
   .row-id { font-family: var(--font-mono); font-size: 0.8rem; font-weight: 600; color: var(--ink); }
   .row-loc { font-size: 0.86rem; color: var(--ink-soft); }
   .row-bottom { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
@@ -281,17 +263,9 @@
 
   /* pills */
   .pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    padding: 2px 8px;
-    border-radius: 999px;
-    font-family: var(--font-mono);
-    font-size: 0.68rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    white-space: nowrap;
+    display: inline-flex; align-items: center; gap: 5px; padding: 2px 8px;
+    border-radius: 999px; font-family: var(--font-mono); font-size: 0.68rem;
+    font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; white-space: nowrap;
   }
   .pill-critical { background: var(--brick-soft); color: var(--brick); }
   .pill-high { background: var(--orange-soft); color: var(--orange); }
@@ -302,26 +276,15 @@
   .pill-notqueued { background: var(--surface-2); color: var(--ink-muted); border: 1px solid var(--border); }
   .pill-safety { background: var(--brick-soft); color: var(--brick); }
 
-  /* ---------- detail panel ---------- */
+  /* ---------- detail / station cards ---------- */
 
   .detail {
-    border: 1px solid var(--border);
-    border-radius: 3px;
-    background: var(--surface);
-    padding: 20px 24px 24px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    min-height: 400px;
+    border: 1px solid var(--border); border-radius: 3px; background: var(--surface);
+    padding: 20px 24px 24px; display: flex; flex-direction: column; gap: 18px; min-height: 320px;
   }
   .detail-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 16px;
-    flex-wrap: wrap;
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 16px;
+    display: flex; justify-content: space-between; align-items: flex-start; gap: 16px;
+    flex-wrap: wrap; border-bottom: 1px solid var(--border); padding-bottom: 16px;
   }
   .detail-id { font-family: var(--font-mono); font-size: 0.78rem; color: var(--ink-muted); margin-bottom: 4px; }
   .detail-loc { font-family: var(--font-display); font-weight: 900; font-size: 1.3rem; color: var(--ink); }
@@ -330,73 +293,48 @@
   .detail-score b { color: var(--ink); font-variant-numeric: tabular-nums; }
 
   .section-label {
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--ink-muted);
-    margin: 0 0 8px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    font-family: var(--font-mono); font-size: 0.7rem; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--ink-muted); margin: 0 0 8px;
+    display: flex; align-items: center; gap: 8px;
   }
-  .section-label .src-tag {
-    padding: 1px 6px;
-    border-radius: 2px;
-    font-weight: 700;
-    letter-spacing: 0.03em;
-  }
+  .section-label .src-tag { padding: 1px 6px; border-radius: 2px; font-weight: 700; letter-spacing: 0.03em; }
   .src-computed { background: var(--slate-soft); color: var(--slate); }
   .src-agent { background: var(--orange-soft); color: var(--orange); }
 
   .chips { display: flex; flex-wrap: wrap; gap: 6px; }
   .chip {
-    font-family: var(--font-mono);
-    font-size: 0.74rem;
-    padding: 3px 8px;
-    border-radius: 3px;
-    background: var(--slate-soft);
-    color: var(--slate);
-    border: 1px solid transparent;
+    font-family: var(--font-mono); font-size: 0.74rem; padding: 3px 8px;
+    border-radius: 3px; background: var(--slate-soft); color: var(--slate);
   }
 
-  .account p {
-    margin: 0 0 10px;
-    font-size: 0.95rem;
-    color: var(--ink-soft);
+  /* an agent "station" -- one visible step in the pipeline, not a merged block */
+  .station {
+    border: 1px solid var(--border); border-left: 3px solid var(--orange);
+    border-radius: 2px; padding: 14px 16px; background: var(--surface);
   }
-  .account p:last-child { margin-bottom: 0; }
-  .account .field-label {
-    font-family: var(--font-mono);
-    font-size: 0.68rem;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--ink-muted);
-    display: block;
-    margin-bottom: 3px;
+  .station-head {
+    display: flex; align-items: center; gap: 8px; margin-bottom: 8px;
   }
-  .cite {
-    font-family: var(--font-mono);
-    font-size: 0.86em;
-    padding: 0 3px;
-    border-radius: 2px;
-    background: var(--slate-soft);
-    color: var(--slate);
+  .station-num {
+    font-family: var(--font-mono); font-size: 0.72rem; font-weight: 700;
+    color: var(--orange); background: var(--orange-soft); border-radius: 50%;
+    width: 20px; height: 20px; display: inline-flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
   }
+  .station-name { font-family: var(--font-display); font-weight: 800; font-size: 0.95rem; color: var(--ink); }
+  .station p { margin: 0; font-size: 0.94rem; color: var(--ink-soft); }
+  .station + .station { margin-top: -4px; }
+  .pipeline-arrow {
+    text-align: center; color: var(--ink-muted); font-family: var(--font-mono); font-size: 0.9rem;
+  }
+
+  .cite { font-family: var(--font-mono); font-size: 0.86em; padding: 0 3px; border-radius: 2px; background: var(--slate-soft); color: var(--slate); }
   .cite-bad {
-    background: var(--brick-soft);
-    color: var(--brick);
-    text-decoration: underline wavy var(--brick);
-    text-underline-offset: 3px;
+    background: var(--brick-soft); color: var(--brick);
+    text-decoration: underline wavy var(--brick); text-underline-offset: 3px;
   }
 
-  .verdict {
-    border-radius: 3px;
-    padding: 14px 16px;
-    display: flex;
-    gap: 12px;
-    align-items: flex-start;
-  }
+  .verdict { border-radius: 3px; padding: 14px 16px; display: flex; gap: 12px; align-items: flex-start; }
   .verdict-verified { background: var(--teal-soft); border: 1px solid var(--teal); }
   .verdict-reopened { background: var(--brick-soft); border: 1px solid var(--brick); }
   .verdict-icon { font-family: var(--font-mono); font-weight: 700; font-size: 0.9rem; flex-shrink: 0; }
@@ -406,48 +344,44 @@
   .verdict-reason { font-size: 0.88rem; color: var(--ink-soft); }
 
   .empty-note {
-    font-size: 0.92rem;
-    color: var(--ink-muted);
-    background: var(--surface-2);
-    border: 1px dashed var(--border-strong);
-    border-radius: 3px;
-    padding: 14px 16px;
+    font-size: 0.92rem; color: var(--ink-muted); background: var(--surface-2);
+    border: 1px dashed var(--border-strong); border-radius: 3px; padding: 14px 16px;
   }
 
   .actions { display: flex; gap: 8px; flex-wrap: wrap; padding-top: 4px; border-top: 1px solid var(--border); margin-top: 4px; }
   .btn {
-    font-family: var(--font-mono);
-    font-size: 0.76rem;
-    font-weight: 600;
-    padding: 8px 14px;
-    border-radius: 3px;
-    border: 1px solid var(--border-strong);
-    background: var(--surface);
-    color: var(--ink-soft);
-    cursor: pointer;
-    transition: background 100ms ease, border-color 100ms ease;
+    font-family: var(--font-mono); font-size: 0.76rem; font-weight: 600; padding: 8px 14px;
+    border-radius: 3px; border: 1px solid var(--border-strong); background: var(--surface);
+    color: var(--ink-soft); cursor: pointer; transition: background 100ms ease, border-color 100ms ease;
   }
   .btn:hover { background: var(--surface-2); }
   .btn-primary { background: var(--ink); border-color: var(--ink); color: var(--bg); }
   .btn-primary:hover { opacity: 0.9; }
   .btn:disabled { opacity: 0.45; cursor: not-allowed; }
-  .action-note {
-    font-family: var(--font-mono);
-    font-size: 0.74rem;
-    color: var(--ink-muted);
-    align-self: center;
-  }
+  .action-note { font-family: var(--font-mono); font-size: 0.74rem; color: var(--ink-muted); align-self: center; }
 
-  .footnote {
-    font-size: 0.82rem;
-    color: var(--ink-muted);
-    border-top: 1px solid var(--border);
-    padding-top: 14px;
+  /* ---------- ledger screen ---------- */
+
+  .ledger-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 860px) { .ledger-cols { grid-template-columns: 1fr; } }
+  .ledger-col { border: 1px solid var(--border); border-radius: 3px; background: var(--surface); overflow: hidden; }
+  .ledger-col-head {
+    padding: 12px 16px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
   }
+  .ledger-col-head h3 { margin: 0; font-family: var(--font-display); font-weight: 800; font-size: 1rem; color: var(--ink); }
+  .ledger-item { padding: 14px 16px; border-bottom: 1px solid var(--border); }
+  .ledger-item:last-child { border-bottom: none; }
+  .ledger-item-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 6px; }
+  .ledger-item-id { font-family: var(--font-mono); font-size: 0.8rem; font-weight: 600; color: var(--ink); }
+  .ledger-item p { margin: 0 0 10px; font-size: 0.9rem; color: var(--ink-soft); }
+
+  .footnote { font-size: 0.82rem; color: var(--ink-muted); border-top: 1px solid var(--border); padding-top: 14px; }
   .footnote code { font-family: var(--font-mono); color: var(--ink-soft); }
 </style>
 </head>
 <body>
+
 
 <div class="app">
 
@@ -458,37 +392,26 @@
     </div>
     <div class="topbar-meta">
       <span>Queue as of <strong>2026-08-25</strong></span>
-      <span class="sla-chip"><span class="dot"></span>critical 2h &middot; high 8h SLA</span>
     </div>
   </div>
 
-  <div class="stats" id="stats" role="tablist" aria-label="Filter the queue"></div>
+  <div class="screen-nav" id="screen-nav"></div>
 
-  <div class="tabs" id="tabs" role="tablist" aria-label="Filter by status"></div>
-
-  <div class="console">
-    <div class="queue">
-      <div class="queue-head">
-        <span id="queue-count">13 tickets</span>
-        <span>sorted by severity</span>
-      </div>
-      <div class="queue-list" id="queue-list"></div>
-    </div>
-
-    <div class="detail" id="detail"></div>
-  </div>
+  <div id="screen-body"></div>
 
   <p class="footnote">
-    Bands, urgency points, dispatch matches, and completion records are
-    computed by <code>rules.py</code> in the
-    <a href="https://github.com/MONISMALIK1/ammar" style="color:inherit">ammar</a>
-    repository &mdash; this console renders that exact output. Closure
-    accounts and recommendations (closure drafter, cost reconciler,
-    reviewer) are illustrative sample text written to demonstrate the
-    console, not live model output &mdash; marked
-    <span class="src-tag src-agent">agent</span> throughout, versus
-    <span class="src-tag src-computed">computed</span> for anything from the
-    rules engine.
+    Every screen is one stage of the architecture in
+    <a href="https://github.com/MONISMALIK1/ammar" style="color:inherit">ammar</a>'s
+    <a href="https://github.com/MONISMALIK1/ammar/blob/main/docs/architecture.md" style="color:inherit">docs/architecture.md</a> —
+    the stage badges under each heading are the diagram's own node names. Bands,
+    urgency points, dispatch matches, and completion records are the exact
+    computed output of <code>rules.py</code>, embedded as data. Closure
+    accounts and recommendations are illustrative sample text written to
+    demonstrate the console, never sent through a model — marked
+    <span class="src-tag src-agent" style="padding:1px 6px;border-radius:2px;">agent</span>
+    throughout, versus
+    <span class="src-tag src-computed" style="padding:1px 6px;border-radius:2px;">computed</span>
+    for anything from the rules engine.
   </p>
 
 </div>
@@ -544,12 +467,10 @@
   var byId = {};
   ORDERS.forEach(function (w) { byId[w.ticket_id] = w; });
 
-  var state = { band: "all", status: "all", selected: "TCK-00008" };
-
   function computedStatus(w) {
     if (w.suspicious) return "reopened";
     var c = CLOSURE[w.ticket_id];
-    if (!c) return w.has_completion ? "not-queued" : "not-queued";
+    if (!c) return "not-queued";
     return c.status;
   }
 
@@ -569,188 +490,311 @@
     });
   }
 
-  function renderStats() {
-    var counts = { critical: 0, high: 0, medium: 0, low: 0 };
-    ORDERS.forEach(function (w) { counts[w.band]++; });
-    var verifiedN = 0, reopenedN = 0;
-    ORDERS.forEach(function (w) {
-      var s = computedStatus(w);
-      if (s === "verified") verifiedN++;
-      if (s === "reopened") reopenedN++;
-    });
-    var tiles = [
-      { key: "band:critical", band: "critical", label: "Critical", value: counts.critical },
-      { key: "band:high", band: "high", label: "High", value: counts.high },
-      { key: "band:medium", band: "medium", label: "Medium", value: counts.medium },
-      { key: "band:low", band: "low", label: "Low", value: counts.low },
-      { key: "status:verified", band: "verified", label: "Verified", value: verifiedN },
-      { key: "status:reopened", band: "reopened", label: "Reopened", value: reopenedN }
-    ];
-    var html = tiles.map(function (t) {
-      var active = (t.key === "band:" + state.band) || (t.key === "status:" + state.status);
-      return '<button class="stat' + (active ? " active" : "") + '" data-key="' + t.key +
-        '" data-band="' + t.band + '"><span class="stat-label">' + t.label +
-        '</span><span class="stat-value">' + t.value + "</span></button>";
-    }).join("");
-    document.getElementById("stats").innerHTML = html;
-    Array.prototype.forEach.call(document.querySelectorAll(".stat"), function (btn) {
-      btn.addEventListener("click", function () {
-        var key = btn.getAttribute("data-key");
-        var parts = key.split(":");
-        state.band = "all"; state.status = "all";
-        if (parts[0] === "band") state.band = parts[1]; else state.status = parts[1];
-        render();
-      });
-    });
-  }
-
-  function renderTabs() {
-    var tabs = [
-      { key: "all", label: "All" },
-      { key: "band:critical", label: "Critical" },
-      { key: "band:high", label: "High" },
-      { key: "band:medium", label: "Medium" },
-      { key: "band:low", label: "Low" },
-      { key: "status:verified", label: "Verified" },
-      { key: "status:reopened", label: "Reopened" },
-      { key: "status:not-queued", label: "Not queued" }
-    ];
-    var html = tabs.map(function (t) {
-      var active = (t.key === "all" && state.band === "all" && state.status === "all") ||
-        (t.key === "band:" + state.band) || (t.key === "status:" + state.status);
-      return '<button class="tab' + (active ? " active" : "") + '" data-key="' + t.key + '">' + t.label + "</button>";
-    }).join("");
-    document.getElementById("tabs").innerHTML = html;
-    Array.prototype.forEach.call(document.querySelectorAll(".tab"), function (btn) {
-      btn.addEventListener("click", function () {
-        var key = btn.getAttribute("data-key");
-        state.band = "all"; state.status = "all";
-        if (key !== "all") {
-          var parts = key.split(":");
-          if (parts[0] === "band") state.band = parts[1]; else state.status = parts[1];
-        }
-        render();
-      });
-    });
-  }
-
-  function filteredOrders() {
-    return ORDERS.filter(function (w) {
-      if (state.band !== "all" && w.band !== state.band) return false;
-      if (state.status !== "all" && computedStatus(w) !== state.status) return false;
-      return true;
-    });
-  }
-
   function pillFor(status) {
     if (status === "verified") return '<span class="pill pill-verified">Verified</span>';
     if (status === "reopened") return '<span class="pill pill-reopened">Reopened</span>';
     return '<span class="pill pill-notqueued">Not queued</span>';
   }
 
-  function renderQueue() {
-    var orders = filteredOrders();
-    document.getElementById("queue-count").textContent = orders.length + " ticket" + (orders.length === 1 ? "" : "s");
-    if (!orders.length) {
-      document.getElementById("queue-list").innerHTML =
-        '<div class="empty-note" style="margin:14px;">No tickets match this filter.</div>';
-      return;
-    }
-    var html = orders.map(function (w) {
-      var status = computedStatus(w);
-      var sel = w.ticket_id === state.selected ? " selected" : "";
-      var notQueued = status === "not-queued" ? " not-queued" : "";
-      var who = w.has_completion ? w.completion_technician_id : (w.dispatched_technician_id || "unassigned");
-      return (
-        '<button class="rowbtn' + sel + notQueued + '" data-id="' + w.ticket_id + '">' +
-        '<div class="row-top">' +
-        '<span class="row-id">' + w.ticket_id + "</span>" +
-        '<span class="pill pill-' + w.band + '">' + BAND_LABEL[w.band] + (w.life_safety ? " • safety" : "") + "</span>" +
-        "</div>" +
-        '<div class="row-loc">' + escapeHtml(w.tower) + " / " + escapeHtml(w.unit) + "</div>" +
-        '<div class="row-bottom">' +
-        '<span class="row-cat">' + escapeHtml(w.category) + " &middot; " + escapeHtml(who) + "</span>" +
-        '<span class="row-points">' + w.urgency_points + " pts</span>" +
-        "</div>" +
-        '<div class="row-bottom">' + pillFor(status) + "<span></span></div>" +
-        "</button>"
-      );
+  function stageTrail(stages) {
+    return '<div class="stage-trail">' + stages.map(function (s, i) {
+      var cls = "stage-badge" + (s.type ? " " + s.type : "");
+      var arrow = i < stages.length - 1 ? '<span class="stage-arrow">&rarr;</span>' : "";
+      return '<span class="' + cls + '">' + s.name + "</span>" + arrow;
+    }).join("") + "</div>";
+  }
+
+  // ======================================================================
+  // Screens -- one per stage-group of the architecture diagram.
+  // ======================================================================
+
+  var SCREENS = [
+    { key: "dashboard", num: "01", title: "Dashboard", stage: "Portfolio Dashboard" },
+    { key: "triage", num: "02", title: "Triage & Dispatch", stage: "Triage Engine → Dispatch Matching" },
+    { key: "review", num: "03", title: "Case Review", stage: "Completion → Agents → Gate" },
+    { key: "ledger", num: "04", title: "Ledger & Sign-off", stage: "Verified/Reopened → Ledger" }
+  ];
+
+  var state = {
+    screen: "review",
+    triageFilter: "all",
+    reviewFilter: "all",
+    reviewSelected: "TCK-00008"
+  };
+
+  function renderNav() {
+    var html = SCREENS.map(function (s) {
+      var active = s.key === state.screen;
+      return '<button class="screen-btn' + (active ? " active" : "") + '" data-screen="' + s.key + '">' +
+        '<span class="screen-num">' + s.num + "</span>" +
+        '<span class="screen-title">' + s.title + "</span>" +
+        '<span class="screen-stage">' + s.stage + "</span>" +
+        "</button>";
     }).join("");
-    document.getElementById("queue-list").innerHTML = html;
-    Array.prototype.forEach.call(document.querySelectorAll(".rowbtn"), function (btn) {
+    document.getElementById("screen-nav").innerHTML = html;
+    Array.prototype.forEach.call(document.querySelectorAll(".screen-btn"), function (btn) {
       btn.addEventListener("click", function () {
-        state.selected = btn.getAttribute("data-id");
+        state.screen = btn.getAttribute("data-screen");
         render();
       });
     });
   }
 
-  function renderDetail() {
-    var w = byId[state.selected];
-    var el = document.getElementById("detail");
-    if (!w) {
-      el.innerHTML = '<div class="empty-note">Select a ticket from the queue to review it.</div>';
-      return;
-    }
+  // ---- Screen 1: Dashboard (Portfolio Dashboard -- computed, always renders) ----
+
+  function renderDashboard() {
+    var byBand = { critical: 0, high: 0, medium: 0, low: 0 };
+    var byTower = {};
+    var awaitingDispatch = 0, awaitingCompletion = 0, inReview = 0, verifiedN = 0, reopenedN = 0;
+
+    ORDERS.forEach(function (w) {
+      byBand[w.band]++;
+      byTower[w.tower] = byTower[w.tower] || { total: 0, critical: 0, high: 0, medium: 0, low: 0 };
+      byTower[w.tower].total++;
+      byTower[w.tower][w.band]++;
+
+      if (!w.has_completion && !w.dispatched_technician_id) awaitingDispatch++;
+      if (!w.has_completion) awaitingCompletion++;
+      var st = computedStatus(w);
+      if (w.has_completion && !CLOSURE[w.ticket_id] && !w.suspicious) inReview++;
+      if (st === "verified") verifiedN++;
+      if (st === "reopened") reopenedN++;
+    });
+
+    var stageHtml =
+      '<div class="screen-head"><h2>Portfolio Dashboard</h2>' +
+      stageTrail([{ name: "Work Order", type: "computed" }, { name: "Portfolio Dashboard", type: "computed" }]) +
+      '<p class="screen-desc">Renders on every run, agents or not — this is the lane in the ' +
+      'architecture diagram that never touches a model. Queue depth, band mix, and dispatch ' +
+      'health across the whole portfolio.</p></div>';
+
+    var statsHtml =
+      '<div class="stats">' +
+      ["critical", "high", "medium", "low"].map(function (b) {
+        return '<div class="stat accent-' + b + '"><span class="stat-label">' + BAND_LABEL[b] +
+          '</span><span class="stat-value">' + byBand[b] + "</span></div>";
+      }).join("") +
+      '<div class="stat accent-verified"><span class="stat-label">Verified</span><span class="stat-value">' + verifiedN + "</span></div>" +
+      '<div class="stat accent-reopened"><span class="stat-label">Reopened</span><span class="stat-value">' + reopenedN + "</span></div>" +
+      "</div>";
+
+    var queueHealth =
+      '<div class="stats">' +
+      '<div class="stat"><span class="stat-label">Awaiting dispatch</span><span class="stat-value">' + awaitingDispatch + "</span></div>" +
+      '<div class="stat"><span class="stat-label">Awaiting completion</span><span class="stat-value">' + awaitingCompletion + "</span></div>" +
+      '<div class="stat"><span class="stat-label">In closure review</span><span class="stat-value">' + inReview + "</span></div>" +
+      "</div>";
+
+    var towerRows = Object.keys(byTower).sort().map(function (t) {
+      var row = byTower[t];
+      return "<tr><td>" + escapeHtml(t) + '</td><td class="num">' + row.total +
+        '</td><td class="num">' + row.critical + '</td><td class="num">' + row.high +
+        '</td><td class="num">' + row.medium + '</td><td class="num">' + row.low + "</td></tr>";
+    }).join("");
+
+    var towerTable =
+      '<div><p class="section-label"><span class="src-tag src-computed">computed</span>By tower</p>' +
+      '<div class="table-wrap"><table><thead><tr><th>Tower</th><th class="num">Open</th>' +
+      '<th class="num">Critical</th><th class="num">High</th><th class="num">Medium</th>' +
+      '<th class="num">Low</th></tr></thead><tbody>' + towerRows + "</tbody></table></div></div>";
+
+    var sla =
+      '<div class="empty-note">SLA targets: critical 2h &middot; high 8h &middot; medium 24h &middot; low 72h ' +
+      "(management-contract defaults — verify against the building's own SLA schedule).</div>";
+
+    document.getElementById("screen-body").innerHTML =
+      stageHtml + statsHtml + queueHealth + towerTable + sla;
+  }
+
+  // ---- Screen 2: Triage & Dispatch (Triage Engine -> Dispatch Matching -> Work Order) ----
+
+  function renderTriage() {
+    var open = ORDERS.filter(function (w) { return !w.has_completion; });
+
+    var stageHtml =
+      '<div class="screen-head"><h2>Triage &amp; Dispatch</h2>' +
+      stageTrail([
+        { name: "Ticket / Roster", type: "computed" },
+        { name: "Triage Engine", type: "computed" },
+        { name: "Dispatch Matching", type: "computed" },
+        { name: "Work Order", type: "computed" },
+      ]) +
+      '<p class="screen-desc">Every ticket without a completion record yet. Urgency band, ' +
+      "points, and the least-loaded certified technician are computed here — no model call " +
+      "in this screen at all.</p></div>";
+
+    var filters = ["all", "critical", "high", "medium", "low"];
+    var subtabs = '<div class="subtabs">' + filters.map(function (f) {
+      var active = f === state.triageFilter;
+      return '<button class="subtab' + (active ? " active" : "") + '" data-filter="' + f + '">' +
+        (f === "all" ? "All" : BAND_LABEL[f]) + "</button>";
+    }).join("") + "</div>";
+
+    var rows = open.filter(function (w) {
+      return state.triageFilter === "all" || w.band === state.triageFilter;
+    });
+
+    var listHtml = rows.map(function (w) {
+      var dispatch = w.dispatched_technician_id
+        ? '<span class="chip">' + w.dispatched_technician_id + " assigned</span>"
+        : '<span class="pill pill-notqueued">no technician available</span>';
+      return (
+        '<div class="rowbtn" style="cursor:default;">' +
+        '<div class="row-top"><span class="row-id">' + w.ticket_id + "</span>" +
+        '<span class="pill pill-' + w.band + '">' + BAND_LABEL[w.band] + (w.life_safety ? " • safety" : "") + "</span></div>" +
+        '<div class="row-loc">' + escapeHtml(w.tower) + " / " + escapeHtml(w.unit) + "</div>" +
+        '<div class="row-bottom"><span class="row-cat">' + escapeHtml(w.category) + '</span>' +
+        '<span class="row-points">' + w.urgency_points + " pts</span></div>" +
+        '<div class="row-bottom">' + dispatch + "<span></span></div>" +
+        "</div>"
+      );
+    }).join("");
+
+    document.getElementById("screen-body").innerHTML =
+      stageHtml +
+      '<div class="queue"><div class="queue-head"><span>' + rows.length + " ticket" + (rows.length === 1 ? "" : "s") +
+      '</span><span>sorted by severity</span></div>' + subtabs +
+      '<div class="queue-list" style="max-height:none;">' + (listHtml || '<div class="empty-note" style="margin:14px;">No tickets match this filter.</div>') +
+      "</div></div>";
+
+    Array.prototype.forEach.call(document.querySelectorAll(".subtab"), function (btn) {
+      btn.addEventListener("click", function () {
+        state.triageFilter = btn.getAttribute("data-filter");
+        render();
+      });
+    });
+  }
+
+  // ---- Screen 3: Case Review (Completion Builder -> 3 agents -> Verification Gate) ----
+
+  function renderReview() {
+    var completed = ORDERS.filter(function (w) { return w.has_completion; });
+
+    var stageHtml =
+      '<div class="screen-head"><h2>Case Review</h2>' +
+      stageTrail([
+        { name: "Completion Builder", type: "computed" },
+        { name: "Closure Drafter", type: "agent" },
+        { name: "Cost Reconciler", type: "agent" },
+        { name: "Dispute-Risk Reviewer", type: "agent" },
+        { name: "Verification Gate", type: "gate" },
+      ]) +
+      '<p class="screen-desc">Only tickets with a technician-submitted completion record land ' +
+      "here. A suspicious completion never reaches the three agents at all — the gate closes " +
+      "it before any model call.</p></div>";
+
+    var filters = [
+      { key: "all", label: "All" },
+      { key: "verified", label: "Verified" },
+      { key: "reopened", label: "Reopened" },
+      { key: "not-queued", label: "Awaiting closure text" }
+    ];
+    var subtabs = '<div class="subtabs">' + filters.map(function (f) {
+      var active = f.key === state.reviewFilter;
+      return '<button class="subtab' + (active ? " active" : "") + '" data-filter="' + f.key + '">' + f.label + "</button>";
+    }).join("") + "</div>";
+
+    var rows = completed.filter(function (w) {
+      return state.reviewFilter === "all" || computedStatus(w) === state.reviewFilter;
+    });
+
+    var listHtml = rows.map(function (w) {
+      var status = computedStatus(w);
+      var sel = w.ticket_id === state.reviewSelected ? " selected" : "";
+      return (
+        '<button class="rowbtn' + sel + '" data-id="' + w.ticket_id + '">' +
+        '<div class="row-top"><span class="row-id">' + w.ticket_id + "</span>" +
+        '<span class="pill pill-' + w.band + '">' + BAND_LABEL[w.band] + "</span></div>" +
+        '<div class="row-loc">' + escapeHtml(w.tower) + " / " + escapeHtml(w.unit) + "</div>" +
+        '<div class="row-bottom"><span class="row-cat">' + escapeHtml(w.category) + " · " + w.completion_technician_id + '</span>' +
+        '<span class="row-points">' + w.urgency_points + " pts</span></div>" +
+        '<div class="row-bottom">' + pillFor(status) + "<span></span></div>" +
+        "</button>"
+      );
+    }).join("");
+
+    var detailHtml = renderReviewDetail(byId[state.reviewSelected]);
+
+    document.getElementById("screen-body").innerHTML =
+      stageHtml +
+      '<div class="console"><div class="queue"><div class="queue-head"><span>' + rows.length +
+      " ticket" + (rows.length === 1 ? "" : "s") + '</span><span>with a completion record</span></div>' +
+      subtabs + '<div class="queue-list">' +
+      (listHtml || '<div class="empty-note" style="margin:14px;">No tickets match this filter.</div>') +
+      "</div></div><div class=\"detail\">" + detailHtml + "</div></div>";
+
+    Array.prototype.forEach.call(document.querySelectorAll(".subtab"), function (btn) {
+      btn.addEventListener("click", function () {
+        state.reviewFilter = btn.getAttribute("data-filter");
+        render();
+      });
+    });
+    Array.prototype.forEach.call(document.querySelectorAll(".rowbtn[data-id]"), function (btn) {
+      btn.addEventListener("click", function () {
+        state.reviewSelected = btn.getAttribute("data-id");
+        render();
+      });
+    });
+    Array.prototype.forEach.call(document.querySelectorAll("[data-action]"), function (btn) {
+      btn.addEventListener("click", function () {
+        var note = document.createElement("span");
+        note.className = "action-note";
+        note.style.color = "var(--teal)";
+        note.textContent = "Recorded locally — no backend in this demo.";
+        btn.parentNode.appendChild(note);
+        var siblings = btn.parentNode.querySelectorAll("[data-action]");
+        Array.prototype.forEach.call(siblings, function (b) { b.disabled = true; });
+      });
+    });
+  }
+
+  function renderReviewDetail(w) {
+    if (!w) return '<div class="empty-note">Select a ticket from the queue to review it.</div>';
 
     var head =
       '<div class="detail-head">' +
-      '<div><div class="detail-id">' + w.ticket_id + " &middot; " + w.work_order_id + " &middot; " + escapeHtml(w.tenant_name) + '</div>' +
+      '<div><div class="detail-id">' + w.ticket_id + " · " + w.work_order_id + " · " + escapeHtml(w.tenant_name) + '</div>' +
       '<div class="detail-loc">' + escapeHtml(w.tower) + " / " + escapeHtml(w.unit) + "</div></div>" +
-      '<div class="detail-badges">' +
-      '<span class="pill pill-' + w.band + '">' + BAND_LABEL[w.band] + " band</span>" +
+      '<div class="detail-badges"><span class="pill pill-' + w.band + '">' + BAND_LABEL[w.band] + " band</span>" +
       (w.life_safety ? '<span class="pill pill-safety">Life-safety</span>' : "") +
-      '<span class="detail-score">' + escapeHtml(w.category) + ' &middot; <b>' + w.urgency_points + '</b> points</span>' +
+      '<span class="detail-score">' + escapeHtml(w.category) + " · <b>" + w.urgency_points + "</b> points</span>" +
       "</div></div>";
-
-    var body = head;
-
-    if (!w.has_completion) {
-      body +=
-        '<div><p class="section-label"><span class="src-tag src-computed">computed</span>Dispatch</p>' +
-        (w.dispatched_technician_id
-          ? '<div class="chips"><span class="chip">' + w.dispatched_technician_id + " assigned</span></div>"
-          : '<div class="empty-note">No qualified technician is available under the current load cap.</div>') +
-        "</div>";
-      body += '<div class="empty-note">Awaiting the technician’s completion record &mdash; not yet ' +
-        "queued for closure review.</div>";
-      el.innerHTML = body;
-      return;
-    }
 
     var evidence =
       '<div><p class="section-label"><span class="src-tag src-computed">computed</span>Completion record</p>' +
-      '<div class="chips">' + w.evidence.map(function (id) {
-        return '<span class="chip">[' + id + "]</span>";
-      }).join("") + "</div></div>";
-    body += evidence;
+      '<div class="chips">' + w.evidence.map(function (id) { return '<span class="chip">[' + id + "]</span>"; }).join("") +
+      "</div></div>";
+
+    var body = head + evidence;
 
     if (w.suspicious) {
       body +=
+        '<div class="empty-note">Deterministic completion-integrity check failed — the three ' +
+        "agents below never ran for this ticket.</div>" +
         '<div class="verdict verdict-reopened"><span class="verdict-icon">&#9632;</span>' +
         '<div><div class="verdict-title">Reopened</div><div class="verdict-reason">' +
-        "Deterministic completion-integrity check failed &mdash; no model call needed: " +
         escapeHtml(w.suspicious_reason) + "</div></div></div>";
-      el.innerHTML = body;
-      return;
+      return body;
     }
 
     var c = CLOSURE[w.ticket_id];
     if (!c) {
-      body += '<div class="empty-note">This ticket would be queued for the closure pipeline in a live run; ' +
-        "no illustrative account was written for it in this demo.</div>";
-      el.innerHTML = body;
-      return;
+      body += '<div class="empty-note">This ticket would be queued for the closure pipeline in a ' +
+        "live run; no illustrative account was written for it in this demo.</div>";
+      return body;
     }
 
     body +=
-      '<div><p class="section-label"><span class="src-tag src-agent">agent</span>Closure account</p>' +
-      '<div class="account">' +
-      '<span class="field-label">Resident-facing summary</span><p>' + highlightCitations(c.summary, w.evidence) + "</p>" +
-      '<span class="field-label">Service-charge line item</span><p>' + highlightCitations(c.line_item, w.evidence) + "</p>" +
-      '<span class="field-label">Reviewer recommendation: ' + c.recommendation + '</span>' +
-      '<p>' + highlightCitations(c.rationale, w.evidence) + "</p>" +
-      "</div></div>";
+      '<p class="section-label"><span class="src-tag src-agent">agent</span>Three stations, in sequence</p>' +
+      '<div class="station"><div class="station-head"><span class="station-num">1</span>' +
+      '<span class="station-name">Closure Drafter</span></div><p>' + highlightCitations(c.summary, w.evidence) + "</p></div>" +
+      '<div class="pipeline-arrow">&#8595;</div>' +
+      '<div class="station"><div class="station-head"><span class="station-num">2</span>' +
+      '<span class="station-name">Cost Reconciler</span></div><p>' + highlightCitations(c.line_item, w.evidence) + "</p></div>" +
+      '<div class="pipeline-arrow">&#8595;</div>' +
+      '<div class="station"><div class="station-head"><span class="station-num">3</span>' +
+      '<span class="station-name">Dispute-Risk Reviewer &mdash; recommends: ' + c.recommendation + '</span></div><p>' +
+      highlightCitations(c.rationale, w.evidence) + "</p></div>";
 
     var verdictClass = c.status === "verified" ? "verdict-verified" : "verdict-reopened";
     var icon = c.status === "verified" ? "&#10003;" : "&#9632;";
@@ -761,31 +805,82 @@
 
     var confirmLabel = c.status === "verified" ? "Confirm & post to ledger" : "Reassign for re-inspection";
     body +=
-      '<div class="actions">' +
-      '<button class="btn btn-primary" data-action="confirm">' + confirmLabel + "</button>" +
+      '<div class="actions"><button class="btn btn-primary" data-action="confirm">' + confirmLabel + "</button>" +
       '<button class="btn" data-action="override">' + (c.status === "verified" ? "Reopen anyway" : "Verify anyway") + "</button>" +
-      '<span class="action-note">Sole authority: the facilities manager, always.</span>' +
+      '<span class="action-note">Sole authority: the facilities manager, always.</span></div>';
+
+    return body;
+  }
+
+  // ---- Screen 4: Ledger & Sign-off (Verified/Reopened -> Service Charge Ledger / Sign-off) ----
+
+  function renderLedger() {
+    var stageHtml =
+      '<div class="screen-head"><h2>Ledger &amp; Sign-off</h2>' +
+      stageTrail([
+        { name: "Verified", type: "gate" }, { name: "Reopened", type: "gate" },
+        { name: "Service Charge Ledger", type: "computed" }, { name: "Facilities Manager Sign-off", type: "computed" }
+      ]) +
+      '<p class="screen-desc">Nothing here posts a charge or closes a ticket on its own. ' +
+      "Verified tickets are ready for a facilities manager to post; reopened ones — whether " +
+      "caught deterministically or by the gate — wait for a human decision.</p></div>";
+
+    var readyToPost = ORDERS.filter(function (w) {
+      var c = CLOSURE[w.ticket_id];
+      return c && c.status === "verified";
+    });
+    var needsSignoff = ORDERS.filter(function (w) {
+      return computedStatus(w) === "reopened";
+    });
+
+    var postCol = readyToPost.map(function (w) {
+      var c = CLOSURE[w.ticket_id];
+      return (
+        '<div class="ledger-item"><div class="ledger-item-top"><span class="ledger-item-id">' + w.ticket_id +
+        "</span><span class=\"pill pill-verified\">Verified</span></div>" +
+        '<p>' + highlightCitations(c.line_item, w.evidence) + "</p>" +
+        '<div class="actions" style="border:none;margin:0;padding:0;"><button class="btn btn-primary" data-action="post">Post to ledger</button></div></div>'
+      );
+    }).join("") || '<div class="empty-note" style="margin:14px;">Nothing ready to post yet.</div>';
+
+    var signoffCol = needsSignoff.map(function (w) {
+      var reason = w.suspicious ? w.suspicious_reason : (CLOSURE[w.ticket_id] ? CLOSURE[w.ticket_id].reason : "");
+      var deterministic = w.suspicious;
+      return (
+        '<div class="ledger-item"><div class="ledger-item-top"><span class="ledger-item-id">' + w.ticket_id +
+        "</span><span class=\"pill pill-reopened\">" + (deterministic ? "Reopened · deterministic" : "Reopened · gate") + "</span></div>" +
+        '<p>' + escapeHtml(reason) + "</p>" +
+        '<div class="actions" style="border:none;margin:0;padding:0;"><button class="btn btn-primary" data-action="reassign">Reassign technician</button>' +
+        '<button class="btn" data-action="dismiss">Dismiss</button></div></div>'
+      );
+    }).join("") || '<div class="empty-note" style="margin:14px;">Nothing waiting on sign-off.</div>';
+
+    document.getElementById("screen-body").innerHTML =
+      stageHtml +
+      '<div class="ledger-cols">' +
+      '<div class="ledger-col"><div class="ledger-col-head"><h3>Ready to post</h3><span class="stage-badge computed">' + readyToPost.length + "</span></div>" + postCol + "</div>" +
+      '<div class="ledger-col"><div class="ledger-col-head"><h3>Needs sign-off</h3><span class="stage-badge">' + needsSignoff.length + "</span></div>" + signoffCol + "</div>" +
       "</div>";
 
-    el.innerHTML = body;
-
-    Array.prototype.forEach.call(el.querySelectorAll("[data-action]"), function (btn) {
+    Array.prototype.forEach.call(document.querySelectorAll("[data-action]"), function (btn) {
       btn.addEventListener("click", function () {
         var note = document.createElement("span");
         note.className = "action-note";
         note.style.color = "var(--teal)";
         note.textContent = "Recorded locally — no backend in this demo.";
         btn.parentNode.appendChild(note);
-        Array.prototype.forEach.call(el.querySelectorAll("[data-action]"), function (b) { b.disabled = true; });
+        var siblings = btn.parentNode.querySelectorAll("[data-action]");
+        Array.prototype.forEach.call(siblings, function (b) { b.disabled = true; });
       });
     });
   }
 
   function render() {
-    renderStats();
-    renderTabs();
-    renderQueue();
-    renderDetail();
+    renderNav();
+    if (state.screen === "dashboard") renderDashboard();
+    else if (state.screen === "triage") renderTriage();
+    else if (state.screen === "review") renderReview();
+    else if (state.screen === "ledger") renderLedger();
   }
 
   render();
